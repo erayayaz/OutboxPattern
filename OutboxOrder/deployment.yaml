@@ -1,0 +1,37 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: outboxorder
+  labels:
+    app: outboxorder
+spec:
+  clusterIP: None
+  selector:
+    app: outboxorder
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: outboxorder
+  labels:
+    app: outboxorder
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: outboxorder
+  template:
+    metadata:
+      labels:
+        app: outboxorder
+    spec:
+      containers:
+        - name: outboxorder
+          image: outboxorder
+      env:
+        - name: SPRING_DATASOURCE_URL
+          value: jdbc:mysql://mysql:3306/orders
+        - name: SPRING_DATASOURCE_USERNAME
+          value: root
+        - name: SPRING_DATASOURCE_PASSWORD
+          value: verysecret

@@ -1,0 +1,23 @@
+apiVersion: skaffold/v4beta3
+kind: Config
+metadata:
+  name: outboxpattern
+build:
+  artifacts:
+    - image: outboxorder
+      context: OutboxOrder
+      buildpacks:
+        builder: gcr.io/buildpacks/builder:v1
+    - image: outboxpayment
+      context: OutboxPayment
+      buildpacks:
+        builder: gcr.io/buildpacks/builder:v1
+        env:
+        - "BP_JVM_VERSION=17"
+manifests:
+  rawYaml:
+    - mysql/deployment.yaml
+    - outboxpayment/deployment.yaml
+    - outboxorder/deployment.yaml
+    - kafka/deployment.yaml
+    - debezium/deployment.yaml
